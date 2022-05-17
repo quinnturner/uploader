@@ -1,8 +1,9 @@
 
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
-import { generateGcovCoverageFiles } from '../../src/helpers/gcov'
-import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util'
+import { generateGcovCoverageFiles } from '../../src/helpers/gcov.js'
+import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util.js'
+import { describe, test, it} from 'mocha'
 
 describe('generateGcovCoverageFiles()', () => {
     afterEach(() => {
@@ -21,7 +22,7 @@ describe('generateGcovCoverageFiles()', () => {
             error: null
         })
         const projectRoot = process.cwd()
-        expect(await generateGcovCoverageFiles(projectRoot)).toBe(output)
+        expect(await generateGcovCoverageFiles(projectRoot)).to.be(output)
     })
 
     it('should pass gcov arguments directly through', async () => {
@@ -35,7 +36,7 @@ describe('generateGcovCoverageFiles()', () => {
         })
 
         const projectRoot = process.cwd()
-        expect(await generateGcovCoverageFiles(projectRoot, [], [], ['NEWGCOVARG'])).toEqual("Matched")
+        expect(await generateGcovCoverageFiles(projectRoot, [], [], ['NEWGCOVARG'])).to.equal("Matched")
     })
 
     it('should return an error when no gcno files found', async () => {

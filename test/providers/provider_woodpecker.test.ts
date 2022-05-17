@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 
 import * as providerWoodpecker from '../../src/ci_providers/provider_woodpecker'
 import { IServiceParams, UploaderInputs } from '../../src/types'

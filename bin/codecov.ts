@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { logError, main, verbose } from '../src'
-import { addArguments } from '../src/helpers/cli'
+import { logError, main, verbose } from '../src/index.js'
+import { addArguments } from '../src/helpers/cli.js'
 
 var argv = require('yargs') // eslint-disable-line
 

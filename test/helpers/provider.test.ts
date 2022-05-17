@@ -1,8 +1,9 @@
 import childProcess from 'child_process'
-import td from 'testdouble'
-import { detectProvider, setSlug, walkProviders } from '../../src/helpers/provider'
-import { IServiceParams, UploaderInputs } from '../../src/types'
-import { createEmptyArgs } from '../test_helpers'
+import * as td from 'testdouble'
+import { detectProvider, setSlug, walkProviders } from '../../src/helpers/provider.js'
+import { IServiceParams, UploaderInputs } from '../../src/types.js'
+import { createEmptyArgs } from '../test_helpers.js'
+import { describe, test, it} from 'mocha'
 
 describe('detectProvider()', () => {
   afterEach(() => {
@@ -88,29 +89,29 @@ describe('walkProviders()', () => {
       service: 'circleci',
       slug: '',
     }
-    expect(walkProviders(inputs)).toEqual(expectedOutput)
+    expect(walkProviders(inputs)).to.equal(expectedOutput)
   })
 })
 
 describe('setSlug()', () => {
   it('will return an empty string when not correctedly passed values', () => {
-    expect(setSlug(undefined, undefined, undefined)).toEqual('')
-    expect(setSlug(undefined, 'foo', undefined)).toEqual('')
-    expect(setSlug(undefined, undefined, 'bar')).toEqual('')
+    expect(setSlug(undefined, undefined, undefined)).to.equal('')
+    expect(setSlug(undefined, 'foo', undefined)).to.equal('')
+    expect(setSlug(undefined, undefined, 'bar')).to.equal('')
   })
 
   it('will return the args.slug if either orgEnv or repoEnv are not valid', () => {
-    expect(setSlug('baz', undefined, undefined)).toEqual('baz')
-    expect(setSlug('baz', 'foo', undefined)).toEqual('baz')
-    expect(setSlug('baz', undefined, 'bar')).toEqual('baz')  
+    expect(setSlug('baz', undefined, undefined)).to.equal('baz')
+    expect(setSlug('baz', 'foo', undefined)).to.equal('baz')
+    expect(setSlug('baz', undefined, 'bar')).to.equal('baz')  
   })
 
   it('will return the args.slug if set and both orgEnv and repoEnv are valid', () => {
-    expect(setSlug('baz', 'foo', 'bar')).toEqual('baz')
+    expect(setSlug('baz', 'foo', 'bar')).to.equal('baz')
   })
 
   it('will return orgEnv/epoEnv if args.slug is empty and both orgEnv and repoEnv are valid', () => {
-    expect(setSlug('', 'foo', 'bar')).toEqual('foo/bar')
+    expect(setSlug('', 'foo', 'bar')).to.equal('foo/bar')
   })
 })
 

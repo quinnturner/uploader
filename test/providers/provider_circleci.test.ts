@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 
 import * as providerCircleci from '../../src/ci_providers//provider_circleci'
 import { IServiceParams, UploaderInputs } from '../../src/types'

@@ -1,6 +1,6 @@
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
-import { parseSlugFromRemoteAddr } from '../helpers/git'
+import { parseSlugFromRemoteAddr } from '../helpers/git.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.GITLAB_CI)

@@ -1,4 +1,4 @@
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return (

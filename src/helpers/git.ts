@@ -1,4 +1,4 @@
-import { runExternalProgram } from './util'
+import { runExternalProgram } from './util.js'
 
 export function parseSlug(slug: string): string {
   // origin    https://github.com/torvalds/linux.git (fetch)

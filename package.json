@@ -3,12 +3,15 @@
   "version": "0.2.3",
   "description": "Codecov Report Uploader",
   "private": true,
+  "type": "module",
   "bin": {
-    "codecov": "dist/bin/codecov.js"
+    "codecov": "./dist/bin/codecov.js"
+  },
+  "exports": {
+    ".": "./dist/src/index.js"
   },
   "scripts": {
-    "lint": "eslint \"src/**/*.ts\"",
-    "test": "npm run lint && npm run build && jest --runInBand",
+    "test": "npm run build && eslint && c8 mocha",
     "test:e2e": "jest test/e2e/output.test.ts",
     "build:clean": "rm -rf dist",
     "build": "tsc  --build",
@@ -37,6 +40,7 @@
     "https-proxy-agent": "5.0.1",
     "js-yaml": "4.1.0",
     "line-reader": "0.4.0",
+    "micromatch-uploader": "^4.0.4",
     "snake-case": "3.0.4",
     "undici": "5.2.0",
     "validator": "13.7.0",
@@ -45,21 +49,26 @@
   "devDependencies": {
     "@commitlint/cli": "16.2.4",
     "@commitlint/config-conventional": "16.2.4",
+    "@types/chai": "^4.3.1",
     "@types/jest": "27.4.1",
     "@types/js-yaml": "4.0.5",
     "@types/micromatch": "4.0.2",
+    "@types/mocha": "^9.1.1",
     "@types/mock-fs": "4.13.1",
     "@types/node": "16.11.31",
     "@types/validator": "13.7.2",
     "@types/yargs": "17.0.10",
     "@typescript-eslint/eslint-plugin": "5.21.0",
     "@typescript-eslint/parser": "5.21.0",
+    "c8": "^7.11.3",
+    "chai": "^4.3.6",
     "eslint": "8.14.0",
     "eslint-config-prettier": "8.5.0",
     "husky": "7.0.4",
     "jest": "27.5.1",
     "jest-spec-reporter": "1.0.17",
     "lint-staged": "12.4.1",
+    "mocha": "^10.0.0",
     "mock-fs": "5.1.2",
     "nock": "13.2.4",
     "pkg": "5.6.0",
@@ -68,6 +77,7 @@
     "testdouble": "3.16.5",
     "testdouble-jest": "2.0.0",
     "ts-jest": "27.1.4",
+    "ts-node": "^10.7.0",
     "typescript": "4.6.3"
   },
   "lint-staged": {
@@ -78,5 +88,8 @@
     "**/*.{json,yml,yaml,html}": [
       "prettier --write"
     ]
-  }
+  },
+  "workspaces": [
+    "./vendor/micromatch"
+  ]
 }

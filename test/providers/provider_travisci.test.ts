@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 
 import * as providerTravisci from '../../src/ci_providers/provider_travisci'
 import { IServiceParams, UploaderInputs } from '../../src/types'

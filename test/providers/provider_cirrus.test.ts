@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 
 import * as providerCirrus from '../../src/ci_providers/provider_cirrus'
 import { IServiceParams, UploaderInputs } from '../../src/types'

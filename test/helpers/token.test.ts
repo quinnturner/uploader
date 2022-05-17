@@ -1,10 +1,11 @@
 import path from 'path'
 
-import * as fileHelpers from '../../src/helpers/files'
-import * as tokenHelpers from '../../src/helpers/token'
-import { UploaderArgs, UploaderInputs } from '../../src/types'
-import { DEFAULT_UPLOAD_HOST } from '../../src/helpers/constansts'
-import { createEmptyArgs } from '../test_helpers'
+import * as fileHelpers from '../../src/helpers/files.js'
+import * as tokenHelpers from '../../src/helpers/token.js'
+import { UploaderArgs, UploaderInputs } from '../../src/types.js'
+import { DEFAULT_UPLOAD_HOST } from '../../src/helpers/constansts.js'
+import { createEmptyArgs } from '../test_helpers.js'
+import { describe, test, it} from 'mocha'
 
 describe('Get tokens', () => {
   const fixturesDir = path.join(
@@ -22,18 +23,18 @@ describe('Get tokens', () => {
 
   describe('From yaml', () => {
     it('Returns empty with no yaml file', () => {
-      expect(tokenHelpers.getTokenFromYaml('.')).toBe('')
+      expect(tokenHelpers.getTokenFromYaml('.')).to.be('')
     })
 
     it('Returns the correct token from file', () => {
-      expect(tokenHelpers.getTokenFromYaml(fixturesDir)).toBe('faketoken')
+      expect(tokenHelpers.getTokenFromYaml(fixturesDir)).to.be('faketoken')
     })
 
     it('Returns deprecation error from codecov_token', () => {
       jest.spyOn(console, 'error').mockImplementation(() => {
         // Intentionally empty
       })
-      expect(tokenHelpers.getTokenFromYaml(invalidFixturesDir)).toBe('')
+      expect(tokenHelpers.getTokenFromYaml(invalidFixturesDir)).to.be('')
 
       expect(console.error).toHaveBeenCalledWith(
         expect.stringContaining("'codecov_token' is a deprecated field"),
@@ -47,7 +48,7 @@ describe('Get tokens', () => {
         args: { ...createEmptyArgs(), ...{ token: 'argtoken' } },
         environment: { CODECOV_TOKEN: 'envtoken' },
       }
-      expect(tokenHelpers.getToken(inputs, fixturesDir)).toBe('argtoken')
+      expect(tokenHelpers.getToken(inputs, fixturesDir)).to.be('argtoken')
     })
 
     it('Returns from env', () => {
@@ -55,7 +56,7 @@ describe('Get tokens', () => {
         args: {...createEmptyArgs(),},
         environment: { CODECOV_TOKEN: 'envtoken' },
       }
-      expect(tokenHelpers.getToken(inputs, fixturesDir)).toBe('envtoken')
+      expect(tokenHelpers.getToken(inputs, fixturesDir)).to.be('envtoken')
     })
 
     it('Returns from env', () => {
@@ -63,7 +64,7 @@ describe('Get tokens', () => {
         args: {...createEmptyArgs(),},
         environment: {},
       }
-      expect(tokenHelpers.getToken(inputs, fixturesDir)).toBe('faketoken')
+      expect(tokenHelpers.getToken(inputs, fixturesDir)).to.be('faketoken')
     })
 
     it('Returns from no source', () => {
@@ -71,7 +72,7 @@ describe('Get tokens', () => {
         args: {...createEmptyArgs(), },
         environment: {},
       }
-      expect(tokenHelpers.getToken(inputs, '.')).toBe('')
+      expect(tokenHelpers.getToken(inputs, '.')).to.be('')
     })
   })
 
@@ -85,7 +86,7 @@ describe('Get tokens', () => {
         CODECOV_TOKEN: 'badToken',
       },
     }
-    expect(tokenHelpers.getToken(inputs, fixturesDir)).toBe('goodToken')
+    expect(tokenHelpers.getToken(inputs, fixturesDir)).to.be('goodToken')
   })
 
   it('should return token correctly from env when `-u` differs from default host', () => {
@@ -97,7 +98,7 @@ describe('Get tokens', () => {
         CODECOV_TOKEN: 'goodT----oken',
       },
     }
-    expect(tokenHelpers.getToken(inputs, fixturesDir)).toBe('goodT----oken')
+    expect(tokenHelpers.getToken(inputs, fixturesDir)).to.be('goodT----oken')
   })
 
   it('should fail validation when an invalid token is passed and host is not changed', () => {

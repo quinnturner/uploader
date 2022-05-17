@@ -1,7 +1,7 @@
 /**
  * https://docs.drone.io/runner/exec/configuration/reference/
  */
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.DRONE)

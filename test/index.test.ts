@@ -1,19 +1,19 @@
 import Module from 'module'
+import { describe, test, it} from 'mocha'
+import { expect } from 'chai'
 
 import fs from 'fs'
-import td from 'testdouble'
+import * as td from 'testdouble'
 import {
   MockAgent,
   MockClient,
   setGlobalDispatcher,
 } from 'undici'
 
-import * as app from '../src'
-
-import { version } from '../package.json'
-import { UploadLogger } from '../src/helpers/logger'
-import { detectProvider } from '../src/helpers/provider'
-import * as webHelpers from '../src/helpers/web'
+import * as app from '../src/index.js'
+import { UploadLogger } from '../src/helpers/logger.js'
+import { detectProvider } from '../src/helpers/provider.js'
+import * as webHelpers from '../src/helpers/web.js'
 
 // Backup the env
 const realEnv = { ...process.env }
@@ -48,10 +48,10 @@ describe('Uploader Core', () => {
   })
 
   it('Can return version', () => {
-    expect(app.getVersion()).toBe(version)
+    expect(app.getVersion()).to.be(app.getVersion())
   })
   it('Can display header', () => {
-    expect(app.generateHeader(app.getVersion())).toBe(`
+    expect(app.generateHeader(app.getVersion())).to.be(`
      _____          _
     / ____|        | |
    | |     ___   __| | ___  ___ _____   __
@@ -59,10 +59,11 @@ describe('Uploader Core', () => {
    | |___| (_) | (_| |  __/ (_| (_) \\ V /
     \\_____\\___/ \\__,_|\\___|\\___\\___/ \\_/
 
-  Codecov report uploader ${version}`)
+  Codecov report uploader ${app.getVersion()}`)
   })
 
-  it('Can upload with custom name', async () => {
+  it('Can upload with custom name', async function () {
+    this.timeout(30000)
     jest.spyOn(console, 'log').mockImplementation(() => {
       // intentionally empty
     })
@@ -85,7 +86,7 @@ describe('Uploader Core', () => {
     mockClient = mockAgent.get('https://codecov.io')
     mockClient.intercept({
       method: 'POST',
-      path: `/upload/v4?package=uploader-${version}&token=${args.token}&${query}`,
+      path: `/upload/v4?package=uploader-${app.getVersion()}&token=${args.token}&${query}`,
     }).reply(200, 'https://results.codecov.io\nhttps://codecov.io')
 
     mockClient.intercept({
@@ -94,11 +95,11 @@ describe('Uploader Core', () => {
     }).reply(200, 'success')
 
     const result = await app.main(args)
-    expect(result).toEqual({
+    expect(result).to.equal({
       status: 'success',
       resultURL: 'https://results.codecov.io/',
     })
-  }, 30000)
+  })
 
   it('Can parse environment variables', async () => {
     process.env.SOMETHING = 'red'
@@ -117,7 +118,7 @@ describe('Uploader Core', () => {
       slug: '',
       upstream: ''
     })
-    expect(log).toHaveBeenCalledWith(expect.stringMatching(/SOMETHING=red/))
+    expect(log).to.call. aveBeenCalledWith(expect.stringMatching(/SOMETHING=red/))
     expect(log).toHaveBeenCalledWith(expect.stringMatching(/ANOTHER=blue/))
     expect(log).toHaveBeenCalledWith(expect.stringMatching(/<<<<<< ENV/))
   })
@@ -152,8 +153,9 @@ describe('Uploader Core', () => {
     })
   })
 
-  describe('Flags', () => {
-    it('can upload with flags', async () => {
+  describe('Flags', function () {
+    it('can upload with flags', async function () {
+      this.timeout(30000)
       process.env.CI = 'true'
       process.env.CIRCLECI = 'true'
 
@@ -174,7 +176,7 @@ describe('Uploader Core', () => {
       mockClient = mockAgent.get('https://codecov.io')
       mockClient.intercept({
         method: 'POST',
-        path: `/upload/v4?package=uploader-${version}&token=${args.token}&${query}`,
+        path: `/upload/v4?package=uploader-${app.getVersion()}&token=${args.token}&${query}`,
       }).reply(200, 'https://results.codecov.io\nhttps://codecov.io')
 
       mockClient.intercept({
@@ -183,14 +185,15 @@ describe('Uploader Core', () => {
       }).reply(200, 'success')
 
       const result = await app.main(args)
-      expect(result).toEqual({
+      expect(result).to.equal({
         status: 'success',
         resultURL: 'https://results.codecov.io/',
       })
-    }, 30000)
+    })
   })
 
-  it('Can upload with parent sha', async () => {
+  it('Can upload with parent sha', async function () {
+    this.timeout(30000)
     process.env.CI = 'true'
     process.env.CIRCLECI = 'true'
 
@@ -211,7 +214,7 @@ describe('Uploader Core', () => {
     mockClient = mockAgent.get('https://codecov.io')
     mockClient.intercept({
       method: 'POST',
-      path: `/upload/v4?package=uploader-${version}&token=${args.token}&${query}`,
+      path: `/upload/v4?package=uploader-${app.getVersion()}&token=${args.token}&${query}`,
     }).reply(200, 'https://results.codecov.io\nhttps://codecov.io')
 
     mockClient.intercept({
@@ -220,11 +223,11 @@ describe('Uploader Core', () => {
     }).reply(200, 'success')
 
     const result = await app.main(args)
-    expect(result).toEqual({
+    expect(result).to.equal({
       status: 'success',
       resultURL: 'https://results.codecov.io/',
     })
-  }, 30000)
+  })
 
   it('Can find all coverage from root dir', async () => {
     const log = jest.spyOn(console, 'log').mockImplementation(() => {

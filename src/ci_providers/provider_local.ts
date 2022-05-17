@@ -1,6 +1,6 @@
-import { parseSlug } from '../helpers/git'
-import { isProgramInstalled, runExternalProgram } from '../helpers/util'
-import { IServiceParams, UploaderInputs } from '../types'
+import { parseSlug } from '../helpers/git.js'
+import { isProgramInstalled, runExternalProgram } from '../helpers/util.js'
+import { IServiceParams, UploaderInputs } from '../types.js'
 
 // This provider requires git to be installed
 export function detect(): boolean {

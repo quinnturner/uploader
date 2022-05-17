@@ -1,5 +1,5 @@
-import { setSlug } from '../helpers/provider'
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { setSlug } from '../helpers/provider.js'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 /**
  * Detects if this CI provider is being used

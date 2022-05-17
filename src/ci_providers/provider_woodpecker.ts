@@ -1,7 +1,7 @@
 /**
  * https://woodpecker-ci.org/docs/usage/environment#built-in-environment-variables
  */
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return envs.CI === 'woodpecker'

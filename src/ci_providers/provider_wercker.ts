@@ -1,5 +1,5 @@
-import { setSlug } from '../helpers/provider'
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { setSlug } from '../helpers/provider.js'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.WERCKER_MAIN_PIPELINE_STARTED)

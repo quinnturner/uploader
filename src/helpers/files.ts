@@ -3,11 +3,11 @@ import glob from 'fast-glob'
 import fs from 'fs'
 import { readFile } from 'fs/promises'
 import { posix as path } from 'path'
-import { UploaderArgs } from '../types'
-import { logError, UploadLogger } from './logger'
-import { runExternalProgram } from './util'
-import micromatch from "../vendor/micromatch/index.js";
-import { SPAWNPROCESSBUFFERSIZE } from './constansts'
+import { UploaderArgs } from '../types.js'
+import { logError, UploadLogger } from './logger.js'
+import { runExternalProgram } from './util.js'
+import * as micromatch from "micromatch-uploader";
+import { SPAWNPROCESSBUFFERSIZE } from './constansts.js'
 
 export const MARKER_NETWORK_END = '\n<<<<<< network\n'
 export const MARKER_FILE_END = '<<<<<< EOF\n'

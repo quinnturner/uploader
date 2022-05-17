@@ -1,5 +1,5 @@
-import { parseSlugFromRemoteAddr } from '../helpers/git'
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { parseSlugFromRemoteAddr } from '../helpers/git.js'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.JENKINS_URL)

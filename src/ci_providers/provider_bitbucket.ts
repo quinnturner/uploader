@@ -1,6 +1,6 @@
-import { runExternalProgram } from '../helpers/util'
-import { validateSHA } from '../helpers/validate'
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { runExternalProgram } from '../helpers/util.js'
+import { validateSHA } from '../helpers/validate.js'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.CI) && Boolean(envs.BITBUCKET_BUILD_NUMBER)

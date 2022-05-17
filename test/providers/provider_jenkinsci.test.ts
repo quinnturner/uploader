@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
 
 import * as providerJenkinsci from '../../src/ci_providers//provider_jenkinsci'
@@ -85,7 +85,7 @@ describe('Jenkins CI Params', () => {
     ).thenReturn({ stdout: 'https://github.com/testOrg/testRepo.git' })
 
     const params = providerJenkinsci.getServiceParams(inputs)
-    expect(params.slug).toBe('testOrg/testRepo')
+    expect(params.slug).to.be('testOrg/testRepo')
   })
 
   it('gets correct params for overrides', () => {

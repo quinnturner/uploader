@@ -1,6 +1,6 @@
-import { setSlug } from '../helpers/provider'
-import { isSetAndNotEmpty } from '../helpers/util'
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { setSlug } from '../helpers/provider.js'
+import { isSetAndNotEmpty } from '../helpers/util.js'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.CI) && Boolean(envs.CIRCLECI)

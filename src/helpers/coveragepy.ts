@@ -1,7 +1,7 @@
 import glob from 'fast-glob'
 
-import { isProgramInstalled, runExternalProgram } from "./util"
-import { info } from './logger'
+import { isProgramInstalled, runExternalProgram } from "./util.js"
+import { info } from './logger.js'
 
 export async function generateCoveragePyFile(projectRoot: string, overrideFiles: string[]): Promise<string> {
     if (!isProgramInstalled('coverage')) {

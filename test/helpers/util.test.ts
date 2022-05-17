@@ -1,7 +1,8 @@
 import childProcess from 'child_process'
-import td from 'testdouble'
-import { isProgramInstalled, runExternalProgram } from '../../src/helpers/util'
-import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/constansts'
+import * as td from 'testdouble'
+import { isProgramInstalled, runExternalProgram } from '../../src/helpers/util.js'
+import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/constansts.js'
+import { describe, test, it} from 'mocha'
 
 describe('isProgramInstalled()', () => {
   afterEach(() => {
@@ -39,7 +40,7 @@ describe('runExternalProgram()', () => {
     ).thenReturn({
       stdout: 'I am output',
     })
-    expect(runExternalProgram('ls', ['-geewhiz'])).toEqual('I am output')
+    expect(runExternalProgram('ls', ['-geewhiz'])).to.equal('I am output')
   })
 
   it('should return a trimmed string with no newlines', () => {
@@ -55,6 +56,6 @@ describe('runExternalProgram()', () => {
 
           `,
     })
-    expect(runExternalProgram('ls', ['-geewhiz'])).toEqual('I am output')
+    expect(runExternalProgram('ls', ['-geewhiz'])).to.equal('I am output')
   })
 })

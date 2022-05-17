@@ -1,8 +1,11 @@
 import childprocess from 'child_process'
-import { SPAWNPROCESSBUFFERSIZE } from './constansts'
-export { SPAWNPROCESSBUFFERSIZE } from './constansts'
+import { readFileSync } from 'node:fs'
+import { SPAWNPROCESSBUFFERSIZE } from './constansts.js'
+export { SPAWNPROCESSBUFFERSIZE } from './constansts.js'
 
-
+export function getVersion(): string {
+  return JSON.parse(readFileSync("./package.json").toString('utf8'))['version']
+}
 
 export function isProgramInstalled(programName: string): boolean {
   return !childprocess.spawnSync(programName).error

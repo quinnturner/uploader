@@ -1,10 +1,10 @@
 import fs from 'fs'
 import yaml from 'js-yaml'
 import path from 'path'
-import { UploaderInputs } from '../types'
-import { DEFAULT_UPLOAD_HOST } from './constansts'
-import { info, logError, UploadLogger } from './logger'
-import { validateToken } from './validate'
+import { UploaderInputs } from '../types.js'
+import { DEFAULT_UPLOAD_HOST } from './constansts.js'
+import { info, logError, UploadLogger } from './logger.js'
+import { validateToken } from './validate.js'
 
 /**
  *

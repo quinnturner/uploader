@@ -1,10 +1,10 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
-import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util'
-import { IServiceParams, UploaderInputs } from '../../src/types'
-import { createEmptyArgs } from '../test_helpers'
-
-import * as providerBitrise from '../../src/ci_providers//provider_bitrise'
+import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util.js'
+import { IServiceParams, UploaderInputs } from '../../src/types.js'
+import { createEmptyArgs } from '../test_helpers.js'
+import { describe, test, it} from 'mocha'
+import * as providerBitrise from '../../src/ci_providers//provider_bitrise.js'
 
 describe('Bitrise Params', () => {
   afterEach(() => {

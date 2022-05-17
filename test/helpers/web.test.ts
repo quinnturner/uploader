@@ -5,7 +5,6 @@ import {
   setGlobalDispatcher,
 } from 'undici'
 
-import { version } from '../../package.json'
 import {
   displayChangelog,
   generateQuery,
@@ -16,9 +15,11 @@ import {
   populateBuildParams,
   uploadToCodecovPOST,
   uploadToCodecovPUT,
-} from '../../src/helpers/web'
-import { IServiceParams, PostResults, UploaderArgs } from '../../src/types'
-import { createEmptyArgs } from '../test_helpers'
+} from '../../src/helpers/web.js'
+import { IServiceParams, PostResults, UploaderArgs } from '../../src/types.js'
+import { createEmptyArgs } from '../test_helpers.js'
+import { describe, test, it} from 'mocha'
+import { getVersion } from '../../src/index.js'
 
 describe('Web Helpers', () => {
   let uploadURL: string
@@ -50,7 +51,7 @@ describe('Web Helpers', () => {
     mockClient = mockAgent.get(uploadURL)
     mockClient.intercept({
       method: 'POST',
-      path: `/upload/v4?package=uploader-${version}&token=${token}&hello`,
+      path: `/upload/v4?package=uploader-${getVersion()}&token=${token}&hello`,
     }).reply(200, 'testPOSTHTTP')
 
     const response = await uploadToCodecovPOST(
@@ -65,7 +66,7 @@ describe('Web Helpers', () => {
       },
     )
     try {
-      expect(response).toBe('testPOSTHTTP')
+      expect(response).to.be('testPOSTHTTP')
     } catch (error) {
       throw new Error(`${response} - ${error}`)
       console.trace(error)
@@ -78,7 +79,7 @@ describe('Web Helpers', () => {
     mockClient = mockAgent.get(uploadURL)
     mockClient.intercept({
       method: 'POST',
-      path: `/upload/v4?package=uploader-${version}&token=${token}&hello`,
+      path: `/upload/v4?package=uploader-${getVersion()}&token=${token}&hello`,
     }).reply(200, 'testPOSTHTTPS')
 
     const response = await uploadToCodecovPOST(
@@ -92,7 +93,7 @@ describe('Web Helpers', () => {
         upstream: '',
       },
     )
-    expect(response).toBe('testPOSTHTTPS')
+    expect(response).to.be('testPOSTHTTPS')
   })
 
   it('Can PUT to the storage endpoint', async () => {
@@ -130,29 +131,10 @@ describe('Web Helpers', () => {
       pr: '2',
       job: '6',
     }
-    expect(generateQuery(queryParams)).toBe(
+    expect(generateQuery(queryParams)).to.be(
       'branch=testBranch&commit=commitSHA&build=4&build_url=https%3A%2F%2Fci-providor.local%2Fjob%2Fxyz&name=testName&tag=tagV1&slug=testOrg%2FtestRepo&service=testingCI&flags=unit%2Cuploader&pr=2&job=6',
     )
   })
-
-  /* it('NaN PR numbers are not propagated to the query', () => {
-    const queryParams: IServiceParams  = {
-      branch: 'testBranch',
-      commit: 'commitSHA',
-      build: '4',
-      buildURL: 'https://ci-providor.local/job/xyz',
-      name: 'testName',
-      tag: 'tagV1',
-      slug: 'testOrg/testRepo',
-      service: 'testingCI',
-      flags: 'unit,uploader',
-      pr: NaN,
-      job: '6',
-    }
-    expect(generateQuery(queryParams)).toBe(
-      'branch=testBranch&commit=commitSHA&build=4&build_url=https%3A%2F%2Fci-providor.local%2Fjob%2Fxyz&name=testName&tag=tagV1&slug=testOrg%2FtestRepo&service=testingCI&flags=unit%2Cuploader&pr=&job=6',
-    )
-  }) */
 
   it('can populateBuildParams() from args', () => {
     const result = populateBuildParams(
@@ -177,7 +159,7 @@ describe('Web Helpers', () => {
         pr: '0',
       },
     )
-    expect(result.flags).toBe('testFlag')
+    expect(result.flags).to.be('testFlag')
   })
 
   it('can populateBuildParams() from args with multiple flags as string', () => {
@@ -206,7 +188,7 @@ describe('Web Helpers', () => {
         pr: '0',
       },
     )
-    expect(result.flags).toBe('testFlag1,testFlag2')
+    expect(result.flags).to.be('testFlag1,testFlag2')
   })
 
   it('can populateBuildParams() from args with multiple flags as list', () => {
@@ -235,17 +217,17 @@ describe('Web Helpers', () => {
         pr: '0',
       },
     )
-    expect(result.flags).toBe('testFlag1,testFlag2')
+    expect(result.flags).to.be('testFlag1,testFlag2')
   })
 
   it('can getPackage() from source', () => {
     const result = getPackage('github-actions-2.0.0')
-    expect(result).toBe(`github-actions-2.0.0-uploader-${version}`)
+    expect(result).to.be(`github-actions-2.0.0-uploader-${getVersion()}`)
   })
 
   it('can getPackage() from no source', () => {
     const result = getPackage('')
-    expect(result).toBe(`uploader-${version}`)
+    expect(result).to.be(`uploader-${getVersion()}`)
   })
 
   describe('parsePOSTResults()', () => {
@@ -286,7 +268,7 @@ describe('displayChangelog()', () => {
   it('displays the correct link containing the current version', () => {
     const fn = jest.spyOn(console, 'log').mockImplementation(() => void {})
     displayChangelog()
-    expect(fn).toBeCalledWith(expect.stringContaining(version))
+    expect(fn).toBeCalledWith(expect.stringContaining(getVersion()))
   })
 })
 
@@ -303,13 +285,13 @@ describe('generateRequestHeadersPOST()', () => {
       args,
     )
 
-    expect(requestHeaders.url.href).toEqual(
+    expect(requestHeaders.url.href).to.equal(
       `https://localhost.local/upload/v4?package=${getPackage(
         'G',
       )}&token=134&slug=testOrg/testUploader`,
     )
-    expect(typeof requestHeaders.options.body).toEqual('undefined')
-    expect(typeof requestHeaders.agent).toEqual('undefined')
+    expect(typeof requestHeaders.options.body).to.equal('undefined')
+    expect(typeof requestHeaders.agent).to.equal('undefined')
   })
 
   it('should return return the correct url when args.upstream is set', () => {
@@ -322,13 +304,13 @@ describe('generateRequestHeadersPOST()', () => {
       args,
     )
 
-    expect(requestHeaders.url.href).toEqual(
+    expect(requestHeaders.url.href).to.equal(
       `https://localhost.local/upload/v4?package=${getPackage(
         'G',
       )}&token=134&slug=testOrg/testUploader`,
     )
 
-    expect(typeof requestHeaders.options.body).toEqual('undefined')
+    expect(typeof requestHeaders.options.body).to.equal('undefined')
     expect(requestHeaders.agent).toMatchObject(
       new ProxyAgent(args.upstream),
     )
@@ -346,9 +328,9 @@ describe('generateRequestHeadersPUT()', () => {
       args,
     )
 
-    expect(requestHeaders.url.href).toEqual('https://localhost.local/')
-    expect(requestHeaders.options.body).toEqual("I'm a coverage report!")
-    expect(typeof requestHeaders.agent).toEqual('undefined')
+    expect(requestHeaders.url.href).to.equal('https://localhost.local/')
+    expect(requestHeaders.options.body).to.equal("I'm a coverage report!")
+    expect(typeof requestHeaders.agent).to.equal('undefined')
   })
 
   it('should return return the correct url when args.upstream is set', () => {
@@ -359,8 +341,8 @@ describe('generateRequestHeadersPUT()', () => {
       args,
     )
 
-    expect(requestHeaders.url.href).toEqual('https://localhost.local/')
-    expect(requestHeaders.options.body).toEqual("I'm a coverage report!")
+    expect(requestHeaders.url.href).to.equal('https://localhost.local/')
+    expect(requestHeaders.options.body).to.equal("I'm a coverage report!")
     expect(requestHeaders.agent).toMatchObject(
       new ProxyAgent(args.upstream),
     )

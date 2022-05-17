@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
 
 import * as providerTeamCity from '../../src/ci_providers/provider_teamcity'

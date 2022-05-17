@@ -1,10 +1,10 @@
 /**
  * https://docs.github.com/en/actions/learn-github-actions/environment-variables
  */
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
-import { runExternalProgram } from "../helpers/util"
-import { info, UploadLogger } from '../helpers/logger'
+import { runExternalProgram } from "../helpers/util.js"
+import { info, UploadLogger } from '../helpers/logger.js'
 
 export function detect(envs: UploaderEnvs): boolean {
   return Boolean(envs.GITHUB_ACTIONS)

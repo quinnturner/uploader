@@ -1,7 +1,8 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
-import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util'
-import { generateXcodeCoverageFiles } from '../../src/helpers/xcode'
+import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util.js'
+import { generateXcodeCoverageFiles } from '../../src/helpers/xcode.js'
+import { describe, test, it} from 'mocha'
 
 describe('generateXcodeCoverageFiles()', () => {
     afterEach(() => {
@@ -23,7 +24,7 @@ describe('generateXcodeCoverageFiles()', () => {
             error: null
         })
 
-        expect(await generateXcodeCoverageFiles('../fixtures/xcode/test.xcresult')).toBe('./coverage-report-test.json')
+        expect(await generateXcodeCoverageFiles('../fixtures/xcode/test.xcresult')).to.be('./coverage-report-test.json')
     })
 
     it('should return an error when xcode is not installed', async () => {

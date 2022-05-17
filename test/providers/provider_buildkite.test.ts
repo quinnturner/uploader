@@ -1,7 +1,8 @@
-import td from 'testdouble'
-import * as providerBuildkite from '../../src/ci_providers/provider_buildkite'
-import { IServiceParams, UploaderInputs } from '../../src/types'
-import { createEmptyArgs } from '../test_helpers'
+import * as td from 'testdouble'
+import * as providerBuildkite from '../../src/ci_providers/provider_buildkite.js'
+import { IServiceParams, UploaderInputs } from '../../src/types.js'
+import { createEmptyArgs } from '../test_helpers.js'
+import { describe, test, it} from 'mocha'
 
 describe('Buildkite Params', () => {
   afterEach(() => {

@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 
 import * as providerCodeBuild from '../../src/ci_providers/provider_codebuild'
 import { IServiceParams, UploaderInputs } from '../../src/types'

@@ -1,9 +1,10 @@
 import path from 'path'
 import childProcess from 'child_process'
-import td from 'testdouble'
-import { generateCoveragePyFile } from '../../src/helpers/coveragepy'
-import * as fileHelpers from '../../src/helpers/files'
-import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util'
+import * as td from 'testdouble'
+import { generateCoveragePyFile } from '../../src/helpers/coveragepy.js'
+import * as fileHelpers from '../../src/helpers/files.js'
+import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util.js'
+import { describe, test, it} from 'mocha'
 
 describe('generateCoveragePyFile()', () => {
     afterEach(() => {
@@ -26,7 +27,7 @@ describe('generateCoveragePyFile()', () => {
             error: null
         })
 
-        expect(await generateCoveragePyFile(fixturesCoveragePyDir, [])).toBe('xml')
+        expect(await generateCoveragePyFile(fixturesCoveragePyDir, [])).to.be('xml')
     })
 
     it('should return if a file is provided', async () => {
@@ -37,7 +38,7 @@ describe('generateCoveragePyFile()', () => {
         })
 
         const projectRoot = process.cwd()
-        expect(await generateCoveragePyFile(projectRoot, ['fakefile'])).toBe('Skipping coveragepy, files already specified')
+        expect(await generateCoveragePyFile(projectRoot, ['fakefile'])).to.be('Skipping coveragepy, files already specified')
     })
 
     it('should return a log when coveragepy is not installed', async () => {
@@ -45,7 +46,7 @@ describe('generateCoveragePyFile()', () => {
         td.when(spawnSync('coverage')).thenReturn({ error: "command not found: coverage" })
 
         const projectRoot = process.cwd()
-        expect(await generateCoveragePyFile(projectRoot, [])).toBe('coveragepy is not installed')
+        expect(await generateCoveragePyFile(projectRoot, [])).to.be('coveragepy is not installed')
     })
 
     it('should return a log when there are no dotcoverage files', async () => {
@@ -60,6 +61,6 @@ describe('generateCoveragePyFile()', () => {
             error: null
         })
 
-        expect(await generateCoveragePyFile(fixturesYamlDir, [])).toBe('Skipping coveragepy, no .coverage file found.')
+        expect(await generateCoveragePyFile(fixturesYamlDir, [])).to.be('Skipping coveragepy, no .coverage file found.')
     })
 })

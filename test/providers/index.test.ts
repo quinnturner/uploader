@@ -1,8 +1,11 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 
-import providers from '../../src/ci_providers'
-import { UploaderInputs } from '../../src/types'
-import { createEmptyArgs } from '../test_helpers'
+import providers from '../../src/ci_providers/index.js'
+import { UploaderInputs } from '../../src/types.js'
+import { createEmptyArgs } from '../test_helpers.js'
+import { describe, test, it} from 'mocha'
+import { expect } from 'chai'
+
 
 describe('CI Providers', () => {
   afterEach(() => {
@@ -10,19 +13,19 @@ describe('CI Providers', () => {
   })
 
   describe('check that each provider', () =>
-    expect(providers).toBeInstanceOf(Array))
+    expect(providers).to.be.instanceOf(Array))
   providers.forEach(provider => {
     it(`${provider.getServiceName()} has a service name`, () => {
-      expect(typeof provider.getServiceName()).toBe('string')
-      expect(provider.getServiceName()).not.toBe('')
+      expect(typeof provider.getServiceName()).to.be('string')
+      expect(provider.getServiceName()).not.to.be('')
     })
 
     it(`${provider.getServiceName()} has env var names`, () => {
       const envVarNames = provider.getEnvVarNames()
-      expect(typeof envVarNames).toBe('object')
-      expect(envVarNames.length).toBeGreaterThan(0)
+      expect(typeof envVarNames).to.be('object')
+      expect(envVarNames.length).to.be.greaterThan(0)
       for (const envVarName of envVarNames) {
-        expect(typeof envVarName).toBe('string')
+        expect(typeof envVarName).to.be('string')
       }
     })
 
@@ -39,14 +42,14 @@ describe('CI Providers', () => {
       }
 
       const serviceParams = provider.getServiceParams(inputs)
-      expect(serviceParams).not.toBeNull()
+      expect(serviceParams).not.to.be.null
 
       it('has a sha', () => {
-        expect(serviceParams.commit).toEqual(inputs.args.sha)
+        expect(serviceParams.commit).to.equal(inputs.args.sha)
       })
 
       it('has a slug', () => {
-        expect(serviceParams.slug).toEqual(inputs.args.slug)
+        expect(serviceParams.slug).to.equal(inputs.args.slug)
       })
     })
   })

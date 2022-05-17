@@ -1,6 +1,6 @@
 import { promisify } from 'util'
 import { execFile } from 'child_process'
-import { beforeAll } from 'jest-circus'
+import { describe, it} from 'mocha'
 
 const execFilePromise = promisify(execFile)
 
@@ -45,7 +45,8 @@ describe('Uploader Output E2E Tests', () => {
         stdout: '',
       }
     })
-    it('should return an error', async () => {
+    it('should return an error', async function () {
+      this.timeout(20000)
       // Run the uploader
       runResult = await execFilePromise('node', [
         'dist/bin/codecov.js',
@@ -66,6 +67,6 @@ describe('Uploader Output E2E Tests', () => {
       expect(runResult.stdout).toMatch(
         /The error stack is:/,
       )
-    }, 20000)
+    })
   })
 })

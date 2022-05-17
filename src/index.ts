@@ -1,11 +1,10 @@
-import { UploaderArgs, UploaderInputs } from './types'
+import { UploaderArgs, UploaderInputs } from './types.js'
 
 import zlib from 'zlib'
-import { version } from '../package.json'
-import { detectProvider } from './helpers/provider'
-import * as webHelpers from './helpers/web'
-import { info, logError, UploadLogger } from './helpers/logger'
-import { getToken } from './helpers/token'
+import { detectProvider } from './helpers/provider.js'
+import * as webHelpers from './helpers/web.js'
+import { info, logError, UploadLogger } from './helpers/logger.js'
+import { getToken } from './helpers/token.js'
 import {
   cleanCoverageFilePaths,
   coverageFilePatterns,
@@ -21,11 +20,13 @@ import {
   MARKER_NETWORK_END,
   readCoverageFile,
   removeFile,
-} from './helpers/files'
-import { generateCoveragePyFile } from './helpers/coveragepy'
-import { generateGcovCoverageFiles } from './helpers/gcov'
-import { generateXcodeCoverageFiles } from './helpers/xcode'
-import { argAsArray } from './helpers/util'
+} from './helpers/files.js'
+import { generateCoveragePyFile } from './helpers/coveragepy.js'
+import { generateGcovCoverageFiles } from './helpers/gcov.js'
+import { generateXcodeCoverageFiles } from './helpers/xcode.js'
+import { argAsArray, getVersion } from './helpers/util.js'
+export { logError, info, verbose } from './helpers/logger.js'
+export { getVersion } from './helpers/util.js'
 
 /**
  *
@@ -81,7 +82,6 @@ function dryRun(
 export async function main(
   args: UploaderArgs,
 ): Promise<void | Record<string, unknown>> {
-
   if (args.verbose) {
     UploadLogger.setLogLevel('verbose')
   }
@@ -165,13 +165,20 @@ export async function main(
     const gcovInclude: string[] = argAsArray(args.gcovInclude)
     const gcovIgnore: string[] = argAsArray(args.gcovIgnore)
     const gcovArgs: string[] = argAsArray(args.gcovArgs)
-    const gcovLogs = await generateGcovCoverageFiles(projectRoot, gcovInclude, gcovIgnore, gcovArgs)
+    const gcovLogs = await generateGcovCoverageFiles(
+      projectRoot,
+      gcovInclude,
+      gcovIgnore,
+      gcovArgs,
+    )
     UploadLogger.verbose(`${gcovLogs}`)
   }
 
   if (args.xcode) {
     if (!args.xcodeArchivePath) {
-      throw new Error('Please specify xcodeArchivePath to run the Codecov uploader with xcode support')
+      throw new Error(
+        'Please specify xcodeArchivePath to run the Codecov uploader with xcode support',
+      )
     } else {
       const xcodeArchivePath: string = args.xcodeArchivePath
       const xcodeLogs = await generateXcodeCoverageFiles(xcodeArchivePath)
@@ -183,7 +190,10 @@ export async function main(
   requestedPaths = argAsArray(args.file)
 
   try {
-    const coveragePyLogs = await generateCoveragePyFile(projectRoot, requestedPaths)
+    const coveragePyLogs = await generateCoveragePyFile(
+      projectRoot,
+      requestedPaths,
+    )
     UploadLogger.verbose(`${coveragePyLogs}`)
   } catch (error) {
     UploadLogger.verbose(`Skipping coveragepy conversion: ${error}`)
@@ -194,60 +204,72 @@ export async function main(
   if (!args.feature || args.feature.split(',').includes('search') === false) {
     info('Searching for coverage files...')
     const isNegated = (path: string) => path.startsWith('!')
-    coverageFilePaths = coverageFilePaths.concat(await getCoverageFiles(
-      args.dir || projectRoot,
-      (() => {
-        const numOfNegatedPaths = coverageFilePaths.filter(isNegated).length
+    coverageFilePaths = coverageFilePaths.concat(
+      await getCoverageFiles(
+        args.dir || projectRoot,
+        (() => {
+          const numOfNegatedPaths = coverageFilePaths.filter(isNegated).length
 
-        if (coverageFilePaths.length > numOfNegatedPaths) {
-          return coverageFilePaths
-        } else {
-          return coverageFilePaths.concat(coverageFilePatterns())
-        }
-      })(),
-    ))
+          if (coverageFilePaths.length > numOfNegatedPaths) {
+            return coverageFilePaths
+          } else {
+            return coverageFilePaths.concat(coverageFilePatterns())
+          }
+        })(),
+      ),
+    )
 
     // Generate what the file listing would be after the blocklist is applied
 
     let coverageFilePathsAfterFilter = coverageFilePaths
 
     if (coverageFilePaths.length > 0) {
-      coverageFilePathsAfterFilter = filterFilesAgainstBlockList(coverageFilePaths, getBlocklist())
+      coverageFilePathsAfterFilter = filterFilesAgainstBlockList(
+        coverageFilePaths,
+        getBlocklist(),
+      )
     }
-
-
-
 
     // If args.file was passed, emit warning for 'filtered' filess
 
     if (requestedPaths.length > 0) {
       if (coverageFilePathsAfterFilter.length !== requestedPaths.length) {
-        info('Warning: Some files passed via the -f flag would normally be excluded from search.')
-        info('If Codecov encounters issues processing your reports, please review https://docs.codecov.com/docs/supported-report-formats')
+        info(
+          'Warning: Some files passed via the -f flag would normally be excluded from search.',
+        )
+        info(
+          'If Codecov encounters issues processing your reports, please review https://docs.codecov.com/docs/supported-report-formats',
+        )
       }
     } else {
       // Overwrite coverageFilePaths with coverageFilePathsAfterFilter
       info('Warning: Some files located via search were excluded from upload.')
-      info('If Codecov did not locate your files, please review https://docs.codecov.com/docs/supported-report-formats')
+      info(
+        'If Codecov did not locate your files, please review https://docs.codecov.com/docs/supported-report-formats',
+      )
 
       coverageFilePaths = coverageFilePathsAfterFilter
     }
-
   }
 
   let coverageFilePathsThatExist: string[] = []
 
   if (coverageFilePaths.length > 0) {
-    coverageFilePathsThatExist = cleanCoverageFilePaths(args.dir || projectRoot, coverageFilePaths)
+    coverageFilePathsThatExist = cleanCoverageFilePaths(
+      args.dir || projectRoot,
+      coverageFilePaths,
+    )
   }
 
   if (coverageFilePathsThatExist.length > 0) {
-    info(`=> Found ${coverageFilePathsThatExist.length} possible coverage files:\n  ` +
-    coverageFilePathsThatExist.join('\n  '))
+    info(
+      `=> Found ${coverageFilePathsThatExist.length} possible coverage files:\n  ` +
+        coverageFilePathsThatExist.join('\n  '),
+    )
   } else {
-    const noFilesError = args.file ?
-      'No coverage files found, exiting.' :
-      'No coverage files located, please try use `-f`, or change the project root with `-R`'
+    const noFilesError = args.file
+      ? 'No coverage files found, exiting.'
+      : 'No coverage files located, please try use `-f`, or change the project root with `-R`'
     throw new Error(noFilesError)
   }
 
@@ -261,7 +283,9 @@ export async function main(
   for (const coverageFile of coverageFilePathsThatExist) {
     let fileContents
     try {
-      info(`Processing ${getFilePath(args.dir || projectRoot, coverageFile)}...`),
+      info(
+        `Processing ${getFilePath(args.dir || projectRoot, coverageFile)}...`,
+      ),
         (fileContents = await readCoverageFile(
           args.dir || projectRoot,
           coverageFile,
@@ -277,7 +301,7 @@ export async function main(
     coverageFileAdded = true
   }
   if (!coverageFileAdded) {
-    throw new Error( 'No coverage files could be found to upload, exiting.')
+    throw new Error('No coverage files could be found to upload, exiting.')
   }
 
   // Cleanup
@@ -320,7 +344,9 @@ export async function main(
   }
 
   if (buildParams.slug !== '' && !buildParams.slug?.match(/\//)) {
-    logError(`Slug must follow the format of "<owner>/<repo>" or be blank. We detected "${buildParams.slug}"`)
+    logError(
+      `Slug must follow the format of "<owner>/<repo>" or be blank. We detected "${buildParams.slug}"`,
+    )
   }
 
   const query = webHelpers.generateQuery(buildParams)
@@ -343,7 +369,7 @@ export async function main(
       )}&${query}
         Content-Type: 'text/plain'
         Content-Encoding: 'gzip'
-        X-Reduced-Redundancy: 'false'`
+        X-Reduced-Redundancy: 'false'`,
     )
 
     const postURL = new URL(uploadHost)
@@ -366,7 +392,10 @@ export async function main(
       args,
     )
     info(JSON.stringify(statusAndResultPair))
-    return {resultURL: statusAndResultPair.resultURL.href, status: statusAndResultPair.status }
+    return {
+      resultURL: statusAndResultPair.resultURL.href,
+      status: statusAndResultPair.status,
+    }
   } catch (error) {
     throw new Error(`Error uploading to ${uploadHost}: ${error}`)
   }
@@ -389,9 +418,3 @@ export function generateHeader(version: string): string {
 
   Codecov report uploader ${version}`
 }
-
-export function getVersion(): string {
-  return version
-}
-
-export { logError, info, verbose } from './helpers/logger'

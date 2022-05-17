@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
 
 import * as providerLocal from '../../src/ci_providers//provider_local'
@@ -130,7 +130,7 @@ describe('Local Params', () => {
       td.when(spawnSync('git', ['rev-parse', 'HEAD'], { maxBuffer: SPAWNPROCESSBUFFERSIZE })).thenReturn({
         stdout: 'testSHA',
       })
-      expect(providerLocal.getServiceParams(inputs).slug).toBe(
+      expect(providerLocal.getServiceParams(inputs).slug).to.be(
         'testOrg/testRepo',
       )
     })
@@ -170,7 +170,7 @@ describe('Local Params', () => {
       td.when(spawnSync('git', ['rev-parse', 'HEAD'], { maxBuffer: SPAWNPROCESSBUFFERSIZE })).thenReturn({
         stdout: 'testSHA',
       })
-      expect(providerLocal.getServiceParams(inputs).slug).toBe(
+      expect(providerLocal.getServiceParams(inputs).slug).to.be(
         'testOrg/testRepo',
       )
     })

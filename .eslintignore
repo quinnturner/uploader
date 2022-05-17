@@ -1,2 +1,3 @@
 test/providers/provider_template.test.js
-dist/**/*
+**/*.ts
+**/*.json

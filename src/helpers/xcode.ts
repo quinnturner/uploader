@@ -1,11 +1,11 @@
 import fs from 'fs/promises'
 
-import { info, UploadLogger } from '../helpers/logger'
+import { info, UploadLogger } from '../helpers/logger.js'
 import {
   XcodeCoverageFileReport,
   XcodeCoverageReport,
-} from '../types'
-import { isProgramInstalled, runExternalProgram } from "./util"
+} from '../types.js'
+import { isProgramInstalled, runExternalProgram } from "./util.js"
 
 export async function generateXcodeCoverageFiles(archivePath: string): Promise<string> {
   if (!isProgramInstalled('xcrun')) {

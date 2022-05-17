@@ -5,7 +5,6 @@ import {
   setGlobalDispatcher,
 } from 'undici'
 
-import { version } from '../../package.json'
 import {
   IRequestHeaders,
   IServiceParams,
@@ -14,8 +13,11 @@ import {
   UploaderArgs,
   UploaderInputs,
 } from '../types'
-import { info } from './logger'
-import * as validateHelpers from './validate'
+import { info } from './logger.js'
+import { getVersion } from './util.js'
+import * as validateHelpers from './validate.js'
+
+const VERSION = getVersion()
 
 /**
  *
@@ -48,9 +50,9 @@ export function populateBuildParams(
 
 export function getPackage(source: string): string {
   if (source) {
-    return `${source}-uploader-${version}`
+    return `${source}-uploader-${VERSION}`
   } else {
-    return `uploader-${version}`
+    return `uploader-${VERSION}`
   }
 }
 
@@ -155,8 +157,9 @@ export function parsePOSTResults(putAndResultUrlPair: string): PostResults {
 }
 
 export function displayChangelog(): void {
-  info(`The change log for this version (v${version}) can be found at`)
-  info(`https://github.com/codecov/uploader/blob/v${version}/CHANGELOG.md`)
+
+  info(`The change log for this version (v${VERSION}) can be found at`)
+  info(`https://github.com/codecov/uploader/blob/v${VERSION}/CHANGELOG.md`)
 }
 
 export function generateRequestHeadersPOST(

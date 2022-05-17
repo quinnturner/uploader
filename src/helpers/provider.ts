@@ -1,6 +1,6 @@
-import providers from '../ci_providers'
-import { info, logError, UploadLogger } from '../helpers/logger'
-import { IServiceParams, UploaderInputs } from '../types'
+import providers from '../ci_providers/index.js'
+import { info, logError, UploadLogger } from '../helpers/logger.js'
+import { IServiceParams, UploaderInputs } from '../types.js'
 
 export function detectProvider(
   inputs: UploaderInputs,

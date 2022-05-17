@@ -1,4 +1,4 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import childProcess from 'child_process'
 
 import * as providerGitLabci from '../../src/ci_providers//provider_gitlabci'
@@ -123,13 +123,13 @@ describe('GitLabCI Params', () => {
       inputs.environment.CI_BUILD_REPO =
         'https://gitlab.com/testOrg/testRepo.git'
       const params = providerGitLabci.getServiceParams(inputs)
-      expect(params.slug).toBe('testOrg/testRepo')
+      expect(params.slug).to.be('testOrg/testRepo')
     })
 
     it('can get the slug from git url', () => {
       inputs.environment.CI_BUILD_REPO = 'git@gitlab.com:testOrg/testRepo.git'
       const params = providerGitLabci.getServiceParams(inputs)
-      expect(params.slug).toBe('testOrg/testRepo')
+      expect(params.slug).to.be('testOrg/testRepo')
     })
 
     it('can get the slug from git config', () => {
@@ -140,7 +140,7 @@ describe('GitLabCI Params', () => {
       ).thenReturn({ stdout: 'https://gitlab.com/testOrg/testRepo.git' })
 
       const params = providerGitLabci.getServiceParams(inputs)
-      expect(params.slug).toBe('testOrg/testRepo')
+      expect(params.slug).to.be('testOrg/testRepo')
     })
 
     it('can get the slug from git config as /', () => {
@@ -151,7 +151,7 @@ describe('GitLabCI Params', () => {
       ).thenReturn({ stdout: 'git@gitlab.com:/' })
 
       const params = providerGitLabci.getServiceParams(inputs)
-      expect(params.slug).toBe('')
+      expect(params.slug).to.be('')
     })
 
     it('can handle no remote origin url', () => {
@@ -162,7 +162,7 @@ describe('GitLabCI Params', () => {
       ).thenReturn({ stdout: '' })
 
       const params = providerGitLabci.getServiceParams(inputs)
-      expect(params.slug).toBe('')
+      expect(params.slug).to.be('')
     })
   })
 

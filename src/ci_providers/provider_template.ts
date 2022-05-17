@@ -1,4 +1,4 @@
-import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types'
+import { IServiceParams, UploaderEnvs, UploaderInputs } from '../types.js'
 
 /**
  * Detects if this CI provider is being used

@@ -1,7 +1,7 @@
 import glob from 'fast-glob'
 
-import { manualBlocklist } from '../../src/helpers/files'
-import { isProgramInstalled, runExternalProgram } from "./util"
+import { manualBlocklist } from '../../src/helpers/files.js'
+import { isProgramInstalled, runExternalProgram } from "./util.js"
 
 export async function generateGcovCoverageFiles(projectRoot: string, include: string[] = [], ignore: string[] = [], gcovArgs: string[] = []): Promise<string> {
     if (!isProgramInstalled('gcov')) {

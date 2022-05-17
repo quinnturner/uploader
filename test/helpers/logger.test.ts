@@ -1,4 +1,5 @@
-import { logError, info, verbose, UploadLogger } from '../../src/helpers/logger'
+import { logError, info, verbose, UploadLogger } from '../../src/helpers/logger.js'
+import { describe, test, it} from 'mocha'
 
 describe('Logging methods', () => {
   afterEach(() => {

@@ -1,10 +1,11 @@
-import td from 'testdouble'
+import * as td from 'testdouble'
 import fs from 'fs'
 import childProcess from 'child_process'
-import * as fileHelpers from '../../src/helpers/files'
-import { getBlocklist } from '../../src/helpers/files'
-import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util'
+import * as fileHelpers from '../../src/helpers/files.js'
+import { getBlocklist } from '../../src/helpers/files.js'
+import { SPAWNPROCESSBUFFERSIZE } from '../../src/helpers/util.js'
 import mock from 'mock-fs'
+import { describe, test, it} from 'mocha'
 
 describe('File Helpers', () => {
   afterEach(() => {
@@ -13,15 +14,15 @@ describe('File Helpers', () => {
   })
 
   it('provides network end marker', () => {
-    expect(fileHelpers.MARKER_NETWORK_END).toBe('\n<<<<<< network\n')
+    expect(fileHelpers.MARKER_NETWORK_END).to.be('\n<<<<<< network\n')
   })
 
   it('provides file end marker', () => {
-    expect(fileHelpers.MARKER_FILE_END).toBe('<<<<<< EOF\n')
+    expect(fileHelpers.MARKER_FILE_END).to.be('<<<<<< EOF\n')
   })
 
   it('provides env end marker', () => {
-    expect(fileHelpers.MARKER_ENV_END).toBe('<<<<<< ENV\n')
+    expect(fileHelpers.MARKER_ENV_END).to.be('<<<<<< ENV\n')
   })
 
   it('can fetch the git root', () => {
@@ -32,7 +33,7 @@ describe('File Helpers', () => {
       spawnSync('git', ['rev-parse', '--show-toplevel'], { maxBuffer: SPAWNPROCESSBUFFERSIZE }),
     ).thenReturn({ stdout: 'gitRoot' })
 
-    expect(fileHelpers.fetchGitRoot()).toBe('gitRoot')
+    expect(fileHelpers.fetchGitRoot()).to.be('gitRoot')
   })
 
   it('errors when it cannot fetch the git root', () => {
@@ -55,7 +56,7 @@ describe('File Helpers', () => {
     })
     expect(
       await fileHelpers.getFileListing('.', { flags: '', verbose: 'true', slug: '',upstream: '' }),
-    ).toBe(files.join('\n'))
+    ).to.be(files.join('\n'))
   })
 
   it('can get a file listing with a file filter', async () => {
@@ -75,7 +76,7 @@ describe('File Helpers', () => {
         slug: '',
         upstream: '',
       }),
-    ).toBe(['package.json', 'package-lock.json'].join('\n'))
+    ).to.be(['package.json', 'package-lock.json'].join('\n'))
   })
 
   it('can get a file listing with a dir filter', async () => {
@@ -95,7 +96,7 @@ describe('File Helpers', () => {
         slug: '',
         upstream: '',
       }),
-    ).toBe(['src/file.js'].join('\n'))
+    ).to.be(['src/file.js'].join('\n'))
   })
 
   it('can get a file listing when git is unavailable', async () => {
@@ -130,7 +131,7 @@ describe('File Helpers', () => {
         slug: '',
         upstream: '',
       }),
-    ).toBe(['build/package.json', 'build/package-lock.json'].join('\n'))
+    ).to.be(['build/package.json', 'build/package-lock.json'].join('\n'))
   })
 
   it('can get a file listing with a dir filter and prefix', async () => {
@@ -151,7 +152,7 @@ describe('File Helpers', () => {
         slug: '',
         upstream: '',
       }),
-    ).toBe(['build/src/file.js'].join('\n'))
+    ).to.be(['build/src/file.js'].join('\n'))
   })
 
   it('can get a file listing when git is unavailable with a filter', async () => {
@@ -186,7 +187,7 @@ describe('File Helpers', () => {
 
   describe('Coverage report handling', () => {
     it('can generate report file header', () => {
-      expect(fileHelpers.fileHeader('test-coverage-file.xml')).toBe(
+      expect(fileHelpers.fileHeader('test-coverage-file.xml')).to.be(
         '# path=test-coverage-file.xml\n',
       )
     })
@@ -200,7 +201,7 @@ describe('File Helpers', () => {
         '.',
         'test-coverage-file.xml',
       )
-      expect(reportContents).toBe('I am test coverage data')
+      expect(reportContents).to.be('I am test coverage data')
     })
 
     it('throws when unable to read a coverage file', async () => {
@@ -256,27 +257,27 @@ describe('File Helpers', () => {
     })
     describe('getFilePath()', () => {
       it('should return path when file path has no starting slash', () => {
-        expect(fileHelpers.getFilePath('/usr/', 'coverage.xml')).toEqual(
+        expect(fileHelpers.getFilePath('/usr/', 'coverage.xml')).to.equal(
           '/usr/coverage.xml',
         )
       })
       it('should return path when file path has no starting slash', () => {
-        expect(fileHelpers.getFilePath('/usr', 'coverage.xml')).toEqual(
+        expect(fileHelpers.getFilePath('/usr', 'coverage.xml')).to.equal(
           '/usr/coverage.xml',
         )
       })
       it('should return path when file path starts with a ./', () => {
-        expect(fileHelpers.getFilePath('/usr/', './coverage.xml')).toEqual(
+        expect(fileHelpers.getFilePath('/usr/', './coverage.xml')).to.equal(
           './coverage.xml',
         )
       })
       it('should return path when project root is . and filepath does not start with ./ or /', () => {
-        expect(fileHelpers.getFilePath('.', 'coverage.xml')).toEqual(
+        expect(fileHelpers.getFilePath('.', 'coverage.xml')).to.equal(
           'coverage.xml',
         )
       })
       it('should return path when project root is . and filepath starts /', () => {
-        expect(fileHelpers.getFilePath('.', '/usr/coverage.xml')).toEqual(
+        expect(fileHelpers.getFilePath('.', '/usr/coverage.xml')).to.equal(
           '/usr/coverage.xml',
         )
       })
@@ -296,7 +297,7 @@ describe('File Helpers', () => {
 
     it("returns the input array when passed an empty ignore array", async () => {
       const paths = await getPaths()
-      expect(fileHelpers.filterFilesAgainstBlockList(paths, [])).toEqual(paths)
+      expect(fileHelpers.filterFilesAgainstBlockList(paths, [])).to.equal(paths)
     })
 
     it("ignores an ignore filename", async () => {
@@ -322,13 +323,19 @@ describe('File Helpers', () => {
       expect(fileHelpers.filterFilesAgainstBlockList(await getPaths(), getBlocklist())).not.toContainEqual(expect.stringMatching(/^\.?codecov\.ya?ml/))
     })
 
-    it.each([
-      "coverage.info",
-      "coverage.opencover.xml",
-      "gap-coverage.json",
-    ])("includes %s", (file) => {
-      expect(fileHelpers.filterFilesAgainstBlockList([file], getBlocklist()))
-        .toContainEqual(expect.stringMatching(file))
+    test
+
+    it("includes coverage.info", () => {
+      expect(fileHelpers.filterFilesAgainstBlockList(["coverage.info"], getBlocklist()))
+      .toContainEqual(expect.stringMatching("coverage.info"))
+    })
+    it("includes coverage.opencover.xml", () => {
+      expect(fileHelpers.filterFilesAgainstBlockList(["coverage.opencover.xml"], getBlocklist()))
+      .toContainEqual(expect.stringMatching("coverage.opencover.xml"))
+    })
+    it("includes gap-coverage.json", () => {
+      expect(fileHelpers.filterFilesAgainstBlockList(["gap-coverage.json"], getBlocklist()))
+      .toContainEqual(expect.stringMatching("gap-coverage.json"))
     })
   })
 
